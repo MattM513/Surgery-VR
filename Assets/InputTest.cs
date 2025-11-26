@@ -1,0 +1,17 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class InputTest : MonoBehaviour
+{
+    public InputActionProperty testActionValue;
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        float value = testActionValue.action.ReadValue<float>();
+    }
+}
