@@ -305,6 +305,7 @@ UnityEngine.AnimationCurve::get_preWrapMode_Injected
 UnityEngine.Animations.AnimationLayerMixerPlayable::SetSingleLayerOptimizationInternal
 UnityEngine.Animator::get_hasBoundPlayables_Injected
 UnityEngine.Animator::ResetTriggerString_Injected
+UnityEngine.Animator::SetFloatString_Injected
 UnityEngine.Animator::SetTriggerString_Injected
 UnityEngine.Application::get_isBatchMode
 UnityEngine.Application::get_isFocused
