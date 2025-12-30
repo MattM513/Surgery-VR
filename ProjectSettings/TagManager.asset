@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - BoneGrab
+  - Brain
   layers:
   - Default
   - TransparentFX
