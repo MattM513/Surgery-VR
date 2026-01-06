@@ -1,39 +1,67 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+using System.Collections.Generic; // Needed for Lists
 
 public class BodyPartRevealer : MonoBehaviour
 {
-    [Header("Settings")]
-    public SkinnedMeshRenderer targetMesh;  // Drag the CC_Base_Body here
-    public int materialIndexToSwap;         // The index number (e.g., 3 for Body, 5 for Head)
-    public Material xRayMaterial;           // Drag your Mat_Surgery_Glass here
+    // This allows you to group data in the Inspector
+    [System.Serializable]
+    public class PartToReveal
+    {
+        public string name;             // Just for your own labels (e.g. "Skull")
+        public Renderer renderer;       // The mesh (Body, Skull, etc)
+        public int materialIndex;       // The slot number (0, 3, etc)
+        [HideInInspector] public Material originalMaterial; // Secret storage
+    }
 
-    private Material originalMaterial;
+    [Header("Global Settings")]
+    public Material xRayMaterial;
+
+    [Header("Parts List")]
+    // This creates a list you can expand in the Inspector with the "+" button
+    public List<PartToReveal> bodyParts;
 
     void Start()
     {
-        // 1. Remember what the skin looked like originally
-        originalMaterial = targetMesh.materials[materialIndexToSwap];
+        // Loop through every part in your list and save its original skin
+        foreach (PartToReveal part in bodyParts)
+        {
+            if (part.renderer != null && part.renderer.materials.Length > part.materialIndex)
+            {
+                part.originalMaterial = part.renderer.materials[part.materialIndex];
+            }
+        }
     }
 
     public void ShowInternal()
     {
         Debug.Log("HOVER DETECTED on: " + gameObject.name);
-        // 2. Create a copy of the current material list
-        Material[] currentMats = targetMesh.materials;
-
-        // 3. Swap only the specific slot to Glass
-        currentMats[materialIndexToSwap] = xRayMaterial;
-
-        // 4. Apply the list back to the renderer
-        targetMesh.materials = currentMats;
+        foreach (PartToReveal part in bodyParts)
+        {
+            if (part.renderer != null)
+            {
+                Material[] mats = part.renderer.materials;
+                if (mats.Length > part.materialIndex)
+                {
+                    mats[part.materialIndex] = xRayMaterial;
+                    part.renderer.materials = mats;
+                }
+            }
+        }
     }
 
     public void HideInternal()
     {
-        // Revert back to original skin
-        Material[] currentMats = targetMesh.materials;
-        currentMats[materialIndexToSwap] = originalMaterial;
-        targetMesh.materials = currentMats;
+        foreach (PartToReveal part in bodyParts)
+        {
+            if (part.renderer != null)
+            {
+                Material[] mats = part.renderer.materials;
+                if (mats.Length > part.materialIndex)
+                {
+                    mats[part.materialIndex] = part.originalMaterial;
+                    part.renderer.materials = mats;
+                }
+            }
+        }
     }
 }
